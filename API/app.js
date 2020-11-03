@@ -27,7 +27,7 @@ app.use(cors());
 app
   .route("/api/tasks")
 
-  //send all the tasks
+  //get all the tasks
   .get((req, res) => {
     Task.find((err, results) => {
       if (!err) {
@@ -39,7 +39,7 @@ app
     });
   })
 
-  //create new task
+  //create a new task
   .post((req, res) => {
     var newTask = new Task({
       name: req.body.name
@@ -87,20 +87,19 @@ app
         }
       }
     );
-    res.redirect("/api/tasks");
   })
 
   //patch the selected task
-  .patch((req, res) => {
-    Task.updateOne({ name: req.params.name }, { $set: req.body }, (err) => {
-      if (!err) {
-        console.log("patched");
-      } else {
-        console.log(err);
-      }
-    });
-    res.redirect("/api/tasks");
-  })
+  // .patch((req, res) => {
+  //   Task.updateOne({ name: req.params.name }, { $set: req.body }, (err) => {
+  //     if (!err) {
+  //       console.log("patched");
+  //     } else {
+  //       console.log(err);
+  //     }
+  //   });
+  //   res.redirect("/api/tasks");
+  // })
 
   //delete the selected task
   .delete((req, res) => {
