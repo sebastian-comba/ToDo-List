@@ -11,16 +11,16 @@ import { IconButton } from "@material-ui/core";
 function App() {
   const [tasks, setTasks] = useState([]);
 
+  const fetchData = async () => {
+    const result = await axios({
+      url: "http://localhost:2000/api/tasks",
+      method: get,
+    });
+
+    setTasks(result.data);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios({
-        url: "http://localhost:2000/api/tasks",
-        method: get,
-      });
-
-      setTasks(result.data);
-    };
-
     fetchData();
   }, []);
 
@@ -28,23 +28,23 @@ function App() {
     if (task.name) {
       axios
         .post("http://localhost:2000/api/tasks", task)
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
         })
         .catch(function (error) {
           console.log(error);
         });
-
-      setTasks((prevTasks) => [...prevTasks, task]);
+      console.log("dded " + task.name);
+      fetchData();
     }
   };
 
-  const deleteTask = (id, name) => {
+  const deleteTask = (name) => {
     axios
       .delete("http://localhost:2000/api/task/" + name)
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
-    setTasks((prevTasks) => prevTasks.filter((task, index) => index !== id));
+    fetchData();
     console.log("deleted " + name);
   };
 
@@ -52,14 +52,19 @@ function App() {
     axios
       .delete("http://localhost:2000/api/tasks")
       .then((response) => console.log(response))
-      .catch((err) => console.log(err));;
-    setTasks([]);
+      .catch((err) => console.log(err));
+    fetchData();
     console.log("deleted ALL");
   };
 
-  // const updateTask = () => {
-  //   axios.put();
-  // };
+  const updateTask = (task) => {
+    axios
+      .put("http://localhost:2000/api/tasks/" + task.name)
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+    fetchData();
+    console.log("updated");
+  };
 
   return (
     <div className="app">
@@ -75,6 +80,7 @@ function App() {
       )}
       {tasks.map((item, index) => (
         <Task
+          onEdit={updateTask}
           key={index}
           index={index}
           name={item.name}
