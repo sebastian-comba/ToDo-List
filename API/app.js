@@ -88,19 +88,7 @@ app
       }
     );
   })
-
-  //patch the selected task
-  // .patch((req, res) => {
-  //   Task.updateOne({ name: req.params.name }, { $set: req.body }, (err) => {
-  //     if (!err) {
-  //       console.log("patched");
-  //     } else {
-  //       console.log(err);
-  //     }
-  //   });
-  //   res.redirect("/api/tasks");
-  // })
-
+  
   //delete the selected task
   .delete((req, res) => {
     Task.deleteOne({ name: req.params.name }, (err) => {
