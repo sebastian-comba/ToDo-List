@@ -4,20 +4,21 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Task from "./Task";
 import Input from "./Input";
-import { get } from "mongoose";
 import Counter from "./Counter";
 import { IconButton } from "@material-ui/core";
 
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  const fetchData = async () => {
-    const result = await axios({
-      url: "http://localhost:2000/api/tasks",
-      method: get,
-    });
-
-    setTasks(result.data);
+  const fetchData = () => {
+    axios
+      .get("http://localhost:2000/api/tasks")
+      .then((res) => {
+        setTasks(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function App() {
         .catch(function (error) {
           console.log(error);
         });
-      console.log("dded " + task.name);
+      console.log("added " + task.name);
       fetchData();
     }
   };
@@ -57,14 +58,14 @@ function App() {
     console.log("deleted ALL");
   };
 
-  const updateTask = (task) => {
-    axios
-      .put("http://localhost:2000/api/tasks/" + task.name)
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
-    fetchData();
-    console.log("updated");
-  };
+  // const updateTask = (task) => {
+  //   axios
+  //     .put("http://localhost:2000/api/tasks/" + task.name)
+  //     .then((response) => console.log(response))
+  //     .catch((err) => console.log(err));
+  //   fetchData();
+  //   console.log("updated " + task.name);
+  // };
 
   return (
     <div className="app">
@@ -80,7 +81,6 @@ function App() {
       )}
       {tasks.map((item, index) => (
         <Task
-          onEdit={updateTask}
           key={index}
           index={index}
           name={item.name}

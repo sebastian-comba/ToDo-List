@@ -21,7 +21,7 @@ function Input(props) {
       name: value,
     }));
   }
-  
+
   return (
     <div className="input">
       <form onSubmit={submitTask}>
