@@ -9,7 +9,13 @@ import { IconButton } from "@material-ui/core";
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [changed, setChanged] = usState(false);
 
+  const refreshTasks = () => {
+    setChanged(!changed);
+  };
+
+  // perform GET request to API
   const fetchData = () => {
     axios
       .get("http://localhost:2000/api/tasks")
@@ -23,8 +29,9 @@ function App() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [changed]);
 
+  // perform a POST request to API by adding a new Task
   const addTask = (task) => {
     if (task.name) {
       axios
@@ -36,25 +43,32 @@ function App() {
           console.log(error);
         });
       console.log("added " + task.name);
-      fetchData();
+      refreshTasks();
     }
   };
 
+  // perform a DELETE request to API by deleting a new Task
   const deleteTask = (name) => {
     axios
       .delete("http://localhost:2000/api/task/" + name)
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
-    fetchData();
+    refreshTasks();
     console.log("deleted " + name);
   };
 
+  // perform a DELETE request to API by deleting the selected Tasks
+  const deleteSome = () => {
+    // to develop
+  };
+
+  // perform a DELETE request to API by deleting ALL the Tasks
   const deleteAll = () => {
     axios
       .delete("http://localhost:2000/api/tasks")
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
-    fetchData();
+    refreshTasks();
     console.log("deleted ALL");
   };
 
