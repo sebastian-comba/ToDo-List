@@ -9,22 +9,22 @@ import { IconButton } from "@material-ui/core";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [changed, setChanged] = usState(false);
+  const [changed, setChanged] = useState(false);
 
   const refreshTasks = () => {
     setChanged(!changed);
   };
 
   // perform GET request to API
-  const fetchData = () => {
-    axios
-      .get("http://localhost:2000/api/tasks")
-      .then((res) => {
-        setTasks(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const fetchData = async () => {
+    try {
+      const resp = await axios.get("http://localhost:2000/api/tasks");
+      setTasks(resp.data);
+      console.log(resp.data);
+    } catch (err) {
+      // Handle Error Here
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -39,7 +39,7 @@ function App() {
         .then((response) => {
           console.log(response);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
       console.log("added " + task.name);
